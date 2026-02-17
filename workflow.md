@@ -404,41 +404,36 @@ L'AI lo segna nel TODO.md e il lavoro è concluso. Se il CMS non aveva un profil
 
 ## Organizzazione dei file
 
-### Repository (help-ai)
+La cartella `help-ai/` viene clonata dal repo nella root del progetto. I file di lavoro (dump, SEO, output) vanno direttamente dentro `help-ai/` — il `.gitignore` li esclude dal repo.
 
 ```
-help-ai/
-├── workflow.md                        ← questo file (CMS-agnostico)
-└── cms-known-profiles/
-    ├── joomla-yootheme.md
-    ├── joomla-puro.md
-    ├── wordpress-elementor.md
-    └── ...                            ← cresce con l'uso
-```
-
-### Directory di lavoro (per progetto)
-
-```
-progetto/claude/
-├── dump-db.json (o .sql)              ← dump lingua sorgente (usato solo in Fase 0c e 1)
-├── Seo-IT.docx                        ← file SEO unico italiano
-├── Seo-EN.docx                        ← file SEO unico inglese
-├── Seo-FR.docx                        ← (ecc.)
-├── TODO.md                            ← stato avanzamento (unico, tutte le lingue)
-├── STRUTTURA-PROGETTO.md              ← output Fase 1 (struttura, mapping, regole)
-├── fulltext/                          ← contenuti strutturati estratti, uno per pagina
+progetto/help-ai/
+├── workflow.md                        ← dal repo (CMS-agnostico)
+├── cms-known-profiles/                ← dal repo
+│   ├── joomla-yootheme.md
+│   ├── joomla-puro.md
+│   ├── wordpress-elementor.md
+│   └── ...                            ← cresce con l'uso
+├── README.md                          ← dal repo
+├── .gitignore                         ← dal repo (esclude i file di lavoro)
+├── dump-db.json (o .sql)              ← messo dall'utente (ignorato da git)
+├── Seo-IT.docx                        ← messo dall'utente (ignorato da git)
+├── Seo-EN.docx                        ← messo dall'utente (ignorato da git)
+├── TODO.md                            ← creato dall'AI (ignorato da git)
+├── STRUTTURA-PROGETTO.md              ← creato dall'AI (ignorato da git)
+├── fulltext/                          ← creato dall'AI (ignorato da git)
 │   ├── {id}-home.json
 │   ├── {id}-about.json
 │   └── ...
-├── seo-it-sezioni/                    ← creata in Fase 0b (sanitizzata)
+├── seo-it-sezioni/                    ← creato dall'AI (ignorato da git)
 │   ├── seo-it-home.txt
 │   ├── seo-it-chi-siamo.txt
 │   └── ...
-├── seo-en-sezioni/                    ← creata in Fase 0b (sanitizzata)
+├── seo-en-sezioni/                    ← creato dall'AI (ignorato da git)
 │   ├── seo-en-home.txt
 │   ├── seo-en-about-us.txt
 │   └── ...
-└── update-{progetto}.sql              ← output finale (tutte le lingue)
+└── update-{progetto}.sql              ← output finale (ignorato da git)
 ```
 
 Il dump completo e i file SEO unici si leggono **una volta sola** (Fase 0b e 1), poi si scrivono i file spezzettati e STRUTTURA-PROGETTO.md e non si riaprono più. Per ogni pagina l'AI carica **solo tre file**: STRUTTURA-PROGETTO.md + il contenuto strutturato + il file SEO di quella pagina.

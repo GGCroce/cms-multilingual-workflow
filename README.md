@@ -35,11 +35,13 @@ help-ai/
 
 ### 1. Prepara i file
 
-Nella directory di lavoro del progetto crea una cartella `claude/` con:
+Nella root del progetto, clona questo repo come cartella `help-ai/` e aggiungi:
 
 - `dump-db.json` — dump del DB nella lingua sorgente (articoli, menu, categorie, moduli, associazioni)
 - `Seo-IT.docx` — file SEO tradotto in italiano (o qualsiasi lingua target)
 - `Seo-EN.docx` — file SEO tradotto in inglese (ecc.)
+
+I file di lavoro vanno direttamente in `help-ai/` — il `.gitignore` li esclude dal repo.
 
 ### 2. Avvia Claude Code
 
@@ -51,8 +53,8 @@ claude
 
 ```
 Leggi il file workflow.md in help-ai/ e il profilo CMS appropriato,
-poi esegui il flusso sulla cartella claude/ di questo progetto.
-Il CMS è Joomla con YOOtheme. Lingua sorgente: DE. Lingue target: IT, EN.
+poi esegui il flusso. Il CMS è Joomla con YOOtheme.
+Lingua sorgente: DE. Lingue target: IT, EN.
 ```
 
 ### 4. Lascia lavorare
