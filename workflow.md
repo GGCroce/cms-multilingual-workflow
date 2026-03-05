@@ -2,6 +2,9 @@
 
 Questo documento descrive la metodologia CMS-agnostica per creare e popolare le versioni multilingue di un sito web. Il lavoro è svolto da un'AI che legge, comprende e sostituisce i testi semanticamente, una pagina alla volta. Il dump DB contiene **solo la lingua sorgente**; l'AI crea da zero tutta la struttura necessaria per ogni lingua target e la popola con i testi tradotti.
 
+> **PRINCIPIO FONDAMENTALE: NESSUN CODICE, MAI.**
+> Ogni fase di questo workflow va eseguita **direttamente dall'LLM**, leggendo i file, comprendendo semanticamente il contenuto e scrivendo l'output. L'AI **non deve mai scrivere script, programmi o codice** per automatizzare il matching, la traduzione, la generazione SQL o qualsiasi altro passaggio. L'unico strumento lecito per leggere file binari (es. DOCX) è un comando di estrazione testo minimale. Tutto il resto — comprensione, matching, sostituzione, generazione query — lo fa l'AI direttamente, sfruttando le sue capacità di comprensione del linguaggio naturale. Questo è il motivo per cui si usa un LLM: perché capisce il significato dei testi, non perché sa scrivere codice.
+
 Il workflow funziona con qualsiasi CMS e page builder. Le informazioni specifiche sul CMS in uso vengono acquisite in due modi:
 - **CMS Known Profiles** (`cms-known-profiles/`): se esiste un profilo per il CMS in uso, l'AI lo legge per avere basi solide e tranelli noti
 - **Discovery online**: se non esiste un profilo, l'AI consulta la documentazione ufficiale del CMS per scoprire architettura, tabelle e logiche multilingua
@@ -187,6 +190,8 @@ Se viene fornito il file unico, l'AI lo spezzetta prima di iniziare il lavoro (v
 
 ## Fase 0b: Spezzettamento e sanitizzazione file SEO
 
+> **Nessun codice.** L'AI legge il file SEO, lo comprende, lo sanitizza e lo divide scrivendo direttamente i file di output. Non scrivere script di parsing.
+
 Se i testi tradotti sono in un unico file per lingua, l'AI lo legge, lo sanitizza e lo divide in file separati per pagina. **Questo va fatto per tutti i file SEO di tutte le lingue target in un unico passaggio.**
 
 ### Sanitizzazione caratteri
@@ -230,6 +235,8 @@ L'AI, **per ogni lingua target**:
 
 ## Fase 0c: Creazione struttura lingue target (se necessaria)
 
+> **Nessun codice.** L'AI scrive direttamente le query INSERT leggendo i dati dal dump e da STRUTTURA-PROGETTO.md. Non generare script che leggono il dump e producono SQL.
+
 **Se nel dump DB non esistono contenuti, menu, categorie e moduli/widget per una lingua target**, l'AI li crea a partire dalla struttura della lingua sorgente.
 
 ### Come procedere
@@ -257,6 +264,8 @@ Aggiornare **STRUTTURA-PROGETTO.md** con tutti i mapping creati e aggiornare **T
 ---
 
 ## Fase 1: Esplorazione della struttura (una volta per progetto)
+
+> **Nessun codice.** L'AI legge direttamente il dump DB, lo comprende e annota le informazioni in STRUTTURA-PROGETTO.md. Non scrivere script di analisi del dump.
 
 **Ogni progetto è diverso, anche a parità di CMS.** L'AI legge il dump DB (intero, questa volta sola) per capire la struttura specifica del progetto.
 
@@ -295,6 +304,8 @@ Scrivere **STRUTTURA-PROGETTO.md** e aggiornare **TODO.md** segnando la Fase 1 c
 ---
 
 ## Fase 2: Sostituzione testi (una pagina alla volta)
+
+> **Nessun codice.** Questa è la fase dove la comprensione semantica dell'LLM è essenziale. L'AI legge il contenuto sorgente e il file SEO tradotto, capisce quale testo corrisponde a quale, e scrive direttamente il contenuto tradotto preservando la struttura HTML/JSON originale. Non scrivere script di matching, regex, o generatori di contenuto.
 
 Questo è il cuore del lavoro. Si procede **lingua per lingua**, e per ogni lingua **contenuto per contenuto**.
 
@@ -345,6 +356,8 @@ Quando tutti i contenuti e moduli di una lingua sono completati, si passa alla l
 ---
 
 ## Fase 3: Generazione SQL
+
+> **Nessun codice.** L'AI scrive direttamente il file SQL, query per query, con i valori concreti. Non scrivere script che generano l'SQL programmaticamente.
 
 Dopo aver elaborato tutti i contenuti e moduli di tutte le lingue, generare un unico file SQL con tutte le operazioni, nell'ordine corretto. Le query specifiche (nomi tabelle, campi, formato escape) dipendono dal CMS — consultare il profilo CMS o le informazioni in STRUTTURA-PROGETTO.md.
 
@@ -448,6 +461,7 @@ Il dump completo e i file SEO unici si leggono **una volta sola** (Fase 0b e 1),
 | Saltare l'esplorazione del dump | Ogni progetto ha struttura diversa, anche a parità di CMS |
 | Caricare tutto il dump per ogni pagina | Spreco di token; basta il singolo contenuto strutturato + il file SEO |
 | Usare script con matching posizionale meccanico | Le strutture contenuto e testo tradotto non sono parallele; l'AI capisce meglio semanticamente |
+| Scrivere codice/script per qualsiasi fase | L'intero workflow va eseguito direttamente dall'LLM senza codice. L'AI legge, comprende e scrive. Se sta generando codice Python/JS/altro, sta sbagliando approccio |
 | Fare regex/replace sul contenuto grezzo | La struttura nidificata si rompe |
 | Tradurre elementi dinamici/template | Sono dinamici, non vengono renderizzati |
 | Dimenticare i link interni | Il testo è tradotto ma i link puntano alla lingua sorgente |
